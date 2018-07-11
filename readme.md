@@ -1,6 +1,6 @@
-# Monitor And Control Server Room
+# Server room monitor and control.
 
-I own and operate a small scale mining farm / server room since the December 2017.
+I own and operate a small scale mining farm / server room since December 2017.
 Operating the room manually is a pain, so generally the objective of the project is to monitor and control the room and all the servers from website or mobile application.
 
 ##### the detailed objectives:
@@ -21,7 +21,8 @@ Operating the room manually is a pain, so generally the objective of the project
    - Arduino/s to control the servers externally and implement safety measurements.
    - Server/s to manage and route the monitored data and the control signals.
 
- So It look something like that.
+#####  So It look something like this
+
 ```
 +---------+        +--------+        +---------+
 |         |        |        |        |         |
@@ -49,7 +50,7 @@ But to guarantee the best level of security even if the server is compromised, t
 
 Also I should note that only controlling signals and data is going to this network, all safety measurements are implemented inside the Arduino.
 
- To answering the original question.
+#####  To answer the original question.
 
  - the Arduino will gather the data from the sensor periodically.
  - the Arduino will control the servers by Relay connected to the power switch of each server.
@@ -67,7 +68,7 @@ Also I should note that only controlling signals and data is going to this netwo
  - Detect Motion by PIR sensor, Flame by flame sensor, Smoke by Qt2 sensor, electricity by hall effect sensor.
  - control start and shut down servers by relay controlled by the Arduino.
 
- Hardware Parts used :
+##### Hardware Parts used :
  
   - 1x Arduino Mega.
   - 1x Ethernet shield V1 W5100.

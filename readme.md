@@ -59,7 +59,7 @@ Also I should note that only controlling signals and data is going to this netwo
  - the server will receive the messages from clients or from Arduino, then validate the message and broadcast the message to the network.
  - the client will receive the messages from the Arduino to display it to the user.
  - the client can make any order which will sent to the server to broadcast to the network. 
- - Design protocol which is end-to-end encrypted and also can be verified by the server to prevent DOS attacks - [Protocol Specifications](protocol/protocol-specifications.md).
+ - Design protocol which is end-to-end encrypted and also can be verified by the server to prevent DOS attacks - [Protocol Specifications](protocol/protocol-specifications.md) - - [Protocol Documentations](protocol/protocol-documentations.md).
 
 
 ## How to achieve these objectives - Hardware:

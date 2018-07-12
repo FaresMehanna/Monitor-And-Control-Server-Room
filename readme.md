@@ -1,9 +1,9 @@
-# Server room monitor and control.
+# Server Room Monitor And Control
 
 I own and operate a small scale mining farm / server room since December 2017.
 Operating the room manually is a pain, so generally the objective of the project is to monitor and control the room and all the servers from website or mobile application.
 
-##### the detailed objectives:
+##### The detailed objectives:
 
  - Monitor the room 24/7 using several sensors.
  - Take action based on the monitored data.
@@ -21,7 +21,7 @@ Operating the room manually is a pain, so generally the objective of the project
    - Arduino/s to control the servers externally and implement safety measurements.
    - Server/s to manage and route the monitored data and the control signals.
 
-#####  So It look something like this
+##### It look something like this
 
 ```
 +---------+        +--------+        +---------+
@@ -59,7 +59,8 @@ Also I should note that only controlling signals and data is going to this netwo
  - the server will receive the messages from clients or from Arduino, then validate the message and broadcast the message to the network.
  - the client will receive the messages from the Arduino to display it to the user.
  - the client can make any order which will sent to the server to broadcast to the network. 
- - Design protocol which is end-to-end encryption and also can be verified by the server to prevent DOS attacks.
+ - Design protocol which is end-to-end encrypted and also can be verified by the server to prevent DOS attacks - [Protocol Specifications](protocol/protocol-specifications.md).
+
 
 ## How to achieve these objectives - Hardware:
  
@@ -68,7 +69,7 @@ Also I should note that only controlling signals and data is going to this netwo
  - Detect Motion by PIR sensor, Flame by flame sensor, Smoke by Qt2 sensor, electricity by hall effect sensor.
  - control start and shut down servers by relay controlled by the Arduino.
 
-##### Hardware Parts used :
+##### Hardware parts used :
  
   - 1x Arduino Mega.
   - 1x Ethernet shield V1 W5100.

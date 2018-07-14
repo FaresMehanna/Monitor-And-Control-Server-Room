@@ -9,12 +9,14 @@
 
 #include "ErrorHandler.h"
 #define FLAME_SENSOR_READ_TIME (100)
+#define FLMAE_SENSOR_UP_TIME (20000)
 
 class FlameHandler {
 private:
     boolean flame;
     uint8_t pin;
-    uint32_t timer;
+    uint32_t useTimer;
+    uint32_t flameTimer;
     ErrorHandler& errorHandler;
 
 public:

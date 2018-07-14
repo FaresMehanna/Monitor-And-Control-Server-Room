@@ -3,7 +3,8 @@
 FlameHandler::FlameHandler(ErrorHandler& _errorHandler, uint8_t _pin) : errorHandler(_errorHandler) {
 	flame = false;
 	pin = _pin;
-	timer = millis();
+	useTimer = millis();
+	flameTimer = millis();
 }
 
 void FlameHandler::setup(void) {
@@ -11,14 +12,17 @@ void FlameHandler::setup(void) {
 }
 
 void FlameHandler::loop(void) {
-	if(millis() - timer < FLAME_SENSOR_READ_TIME){
+	if(millis() - useTimer < FLAME_SENSOR_READ_TIME){
 		return;
 	}
-	timer = millis();
+	useTimer = millis();
 
 	int flameSensorRead = analogRead(pin);
 	if (flameSensorRead < 950){
 		flame = true;
+		flameTimer = millis();
+	} else if (millis() - flameTimer > FLMAE_SENSOR_UP_TIME) {
+		flame = false;
 	}
 }
 

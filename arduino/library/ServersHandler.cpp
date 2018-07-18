@@ -8,7 +8,7 @@ ServersHandler::ServersHandler(ErrorHandler& _errorHandler, uint8_t _serversCoun
 	serversLastPing = (uint32_t *)malloc(sizeof(uint32_t)*_serversCount);
 
 	for(uint8_t i = 0; i < _serversCount; i++){
-		serversOperation[i] = 0;
+		serversOperation[i] = NO_OP;
 		serversTimers[i] = serversLastPing[i] = millis();
 	}
 

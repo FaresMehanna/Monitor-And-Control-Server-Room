@@ -46,12 +46,12 @@ struct NetworkMessageHeader{
   char sender_identifier[8];
   uint8_t message_type;
   uint8_t future_use2[7];
-};
+}__attribute__((packed,aligned(1)));
 
 struct NetworkMessage{
 	struct NetworkMessageHeader message_header;
 	uint8_t payload[PROTOCOl_MAX_PAYLOAD_LENGTH];
-};
+}__attribute__((packed,aligned(1)));
 
 struct Message{
 	char sender_identifier[9];

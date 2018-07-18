@@ -15,10 +15,10 @@ void NetworkSender::encrypt_message(struct NetworkMessage *send_message) {
 
   //do the encryption
   uint8_t* ptr = (uint8_t*) send_message;
+  network_info.encryption_engine.clear();
   network_info.encryption_engine.setKey((uint8_t *) (network_info.network_key), 16);
   network_info.encryption_engine.setIV(aes_vector, 16);
   network_info.encryption_engine.encrypt(ptr+32,ptr+32,send_message->message_header.payload_length+16);
-  network_info.encryption_engine.clear();
 }
 
 void NetworkSender::sign_message(struct NetworkMessage *send_message) {
@@ -39,7 +39,6 @@ void NetworkSender::sign_message(struct NetworkMessage *send_message) {
   network_info.hash_generator.update(ptr+8, PROTOCOl_MESSAGE_HEADER_LENGTH+send_message->message_header.payload_length-8);
   network_info.hash_generator.finalizeHMAC(network_info.network_key, PROTOCOL_KEY_LENGTH, ptr+4, 4);
   *(uint32_t *)(ptr+4) = htonl(*(uint32_t *)(ptr+4));
-
 }
 
 boolean NetworkSender::ethernet_send_message(struct NetworkMessage *send_message) {
@@ -52,9 +51,6 @@ boolean NetworkSender::ethernet_send_message(struct NetworkMessage *send_message
   if(!network_info.client.connected()) {
     return false;
   }
-  
-  Serial.print("MESSAGE LENGTH ");
-  Serial.println(String(message_length));
 
   //send the message upto PROTOCOL_SEND_TRIES*message_length times.
   int tries = 0;

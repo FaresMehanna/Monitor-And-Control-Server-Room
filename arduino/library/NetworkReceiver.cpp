@@ -8,7 +8,6 @@ errorHandler(_errorHandler), network_info(_network_info) {
 
 void NetworkReceiver::ntoh_handling(void) {
   received_message.message_header.HMAC_for_server = ntohl(received_message.message_header.HMAC_for_server);     //Network HMAC server
-  received_message.message_header.HMAC_for_network = ntohl(received_message.message_header.HMAC_for_network);     //Network HMAC network
   received_message.message_header.network_id = ntohl(received_message.message_header.network_id);     //Network Identifier as uint32_t
   received_message.message_header.unix_timestamp = ntohll(received_message.message_header.unix_timestamp);  //unix timestamp as uint64_t
 }
@@ -55,15 +54,15 @@ boolean NetworkReceiver::is_valid_message() {
   uint8_t *ptr = (uint8_t *)&received_message;
 
   //validate the message by using hash values
-  char hash_buffer[4];
-  char* received_hash = (char*) received_message.message_header.HMAC_for_network;
+  uint8_t hash_buffer[4];
+  received_message.message_header.HMAC_for_network = ntohl(received_message.message_header.HMAC_for_network);     //Network HMAC network
+  uint8_t* received_hash = (uint8_t*) &(received_message.message_header.HMAC_for_network);
 
   //generate HMAC for network validation.
   network_info.hash_generator.clear();
   network_info.hash_generator.resetHMAC(network_info.network_key, PROTOCOL_KEY_LENGTH);
   network_info.hash_generator.update(ptr+8, PROTOCOl_MESSAGE_HEADER_LENGTH+received_message.message_header.payload_length-8);
   network_info.hash_generator.finalizeHMAC(network_info.network_key, PROTOCOL_KEY_LENGTH, hash_buffer, 4);
-  *(uint32_t *)hash_buffer = ntohl(*(uint32_t *)hash_buffer);     //Network HMAC server
 
   //if the message signing is not valid then report error and return false
   if(!memcmp(hash_buffer,received_hash,4) == 0) {
@@ -120,7 +119,6 @@ void NetworkReceiver::loop(void) {
     ntoh_handling();
     //if the message is valid then decrypt it and set received_message flag to true.
     decrypt_message();
-    
     //handle if the message is ping
     if(handle_ping_message()) {
       is_message_received = false;

@@ -75,7 +75,7 @@ Also I should note that only controlling signals and data is going to this netwo
   - 1x Ethernet shield V1 W5100.
   - 1x DHT22 sensor for temperature and humidity.
   - 1x PIR sensor for motion detection.
-  - 1x flame sensor for flame detection.
+  - 2x flame sensor for flame detection.
   - 1x QT2 sensor for smoke detection.
   - 1x Hall effect sensor for electricity leaks detection.
   - 1x 4-channel relay.

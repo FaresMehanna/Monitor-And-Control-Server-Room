@@ -26,7 +26,7 @@ SmokeHandler smokeHandler(errorHandler, SMOKE_SENSOR_PIN);
 //Network Handler to recieve/send messages to peers.
 #define SERVER_KEY  "FFFFFFFFFFFFFFFF"
 #define NETWORK_KEY "FFFFFFFFFFFFFFFF"
-#define NETWORK_ID (0xFFFFFFFF)
+#define NETWORK_ID (0x0)
 NetworkInfo networkInfo(NETWORK_ID, SERVER_KEY, NETWORK_KEY);
 NetworkHandler networkHandler(errorHandler, networkInfo);
 

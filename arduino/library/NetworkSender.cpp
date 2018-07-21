@@ -97,8 +97,14 @@ boolean NetworkSender::send(uint8_t _message_type, uint8_t *_payload, uint8_t _p
   //generate payload
   memcpy(message_send.payload, _payload, _payload_length);
 
+  //handle ping messages
+  uint8_t message_type_temp = _message_type;
+
   hton_handling(ptr);
   encrypt_message(ptr);
   sign_message(ptr);
+  if(message_type_temp == 0) {
+    message_send.message_header.HMAC_for_network = 0xFFFFFFFF;
+  }
   return ethernet_send_message(ptr);
 }

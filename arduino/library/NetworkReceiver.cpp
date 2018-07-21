@@ -13,9 +13,39 @@ void NetworkReceiver::ntoh_handling(void) {
 }
 
 boolean NetworkReceiver::handle_ping_message() {
-  if(received_message.message_header.message_type != 0x00) {
+  if(received_message.message_header.payload_length != 0x00) {
     return false;
   }
+  if(received_message.message_header.HMAC_for_network != 0xFFFFFFFF) {
+    return false;
+  }
+  if(*(uint64_t *)received_message.message_header.aes_vector != 0xFFFFFFFFFFFFFFFF) {
+    return false;
+  }
+
+  //pointer to the received message in buffer
+  uint8_t *ptr = (uint8_t *)&received_message;
+
+  //validate the message by using hash values
+  uint8_t hash_buffer[4];
+  uint8_t received_hash[4];
+
+  received_message.message_header.HMAC_for_server = ntohl(received_message.message_header.HMAC_for_server);     //Network HMAC server
+  memcpy(received_hash,&(received_message.message_header.HMAC_for_server),4);
+  uint8_t* recieved_hash = (uint8_t*) &(received_message.message_header.HMAC_for_server);
+  received_message.message_header.HMAC_for_server = htonl(received_message.message_header.HMAC_for_server);     //Network HMAC server
+
+  //generate HMAC for network validation.
+  network_info.hash_generator.clear();
+  network_info.hash_generator.resetHMAC(network_info.server_key, PROTOCOL_KEY_LENGTH);
+  network_info.hash_generator.update(ptr+8, PROTOCOl_MESSAGE_HEADER_LENGTH+received_message.message_header.payload_length-8);
+  network_info.hash_generator.finalizeHMAC(network_info.server_key, PROTOCOL_KEY_LENGTH, hash_buffer, 4);
+
+  //if the message signing is not valid then report error and return false
+  if(!memcmp(hash_buffer,received_hash,4) == 0) {
+    return false;
+  }
+
   network_info.last_poke_from_server = millis();
   return true;
 }
@@ -113,19 +143,18 @@ void NetworkReceiver::loop(void) {
     return;
   }
 
-  //test the validity of the message by validating the hash.
-  if(is_valid_message()) {
+  //handle if the message is ping
+  if(handle_ping_message()) {
+      is_message_received = false;
+      index = 0;
+    //test the validity of the message by validating the hash.
+  } else if(is_valid_message()) { 
     //if all message is read, endianess handling.
     ntoh_handling();
     //if the message is valid then decrypt it and set received_message flag to true.
     decrypt_message();
-    //handle if the message is ping
-    if(handle_ping_message()) {
-      is_message_received = false;
-      index = 0;
-    } else {
-      is_message_received = true;
-    }
+    //set the flag
+    is_message_received = true;
   } else {
     errorHandler.report("NOT VALID MESSAGE");
     is_message_received = false;
